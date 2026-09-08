@@ -53,6 +53,7 @@ hostnames.
 |-------------------------|--------------------------------------------------------------------|
 | `WithTimeout(d)`        | HTTP client timeout (default: 30s)                                 |
 | `WithDisplayAddress(a)` | Address reported in requests                                       |
+| `WithOrigin(o)`         | HTTP `Origin` header sent with requests                             |
 | `WithHTTPClient(c)`     | Inject a custom `http.Client` (its `Timeout` is preserved; `Close` becomes a no-op) |
 | `WithRecipeResolver(r)` | Recipe resolver for `GiveRecipeMaterials`                          |
 

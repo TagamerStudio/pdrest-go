@@ -1912,6 +1912,32 @@ func TestClient_WithDisplayAddressSendsHeader(t *testing.T) {
 	}
 }
 
+func TestClient_WithOriginSendsHeader(t *testing.T) {
+	handler := http.NewServeMux()
+	handler.HandleFunc("/v1/pdapi/version", func(w http.ResponseWriter, r *http.Request) {
+		if got := r.Header.Get("Origin"); got != "http://127.0.0.1" {
+			rejectRequest(t, w, "unexpected origin header: %q", got)
+			return
+		}
+		writeJSON(t, w, VersionResponse{Version: VersionInfo{Major: 1}})
+	})
+
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	client, err := NewClient(srv.URL, "token123", WithOrigin(" http://127.0.0.1 "))
+	if err != nil {
+		t.Fatalf("failed to create client: %v", err)
+	}
+	defer func() {
+		_ = client.Close()
+	}()
+
+	if _, err := client.GetVersion(testCtx); err != nil {
+		t.Fatalf("GetVersion failed: %v", err)
+	}
+}
+
 type errorRoundTripper struct{}
 
 func (errorRoundTripper) RoundTrip(*http.Request) (*http.Response, error) {

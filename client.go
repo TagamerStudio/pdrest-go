@@ -85,6 +85,7 @@ type Client struct {
 	baseURL        string
 	bearerToken    string
 	displayAddress string
+	origin         string
 	timeout        time.Duration
 	timeoutSet     bool
 	httpClient     *http.Client
@@ -107,6 +108,13 @@ func WithTimeout(timeout time.Duration) Option {
 func WithDisplayAddress(displayAddress string) Option {
 	return func(c *Client) {
 		c.displayAddress = displayAddress
+	}
+}
+
+// WithOrigin sets the HTTP Origin header sent with requests.
+func WithOrigin(origin string) Option {
+	return func(c *Client) {
+		c.origin = strings.TrimSpace(origin)
 	}
 }
 
@@ -203,6 +211,9 @@ func (c *Client) setHeaders(req *http.Request) {
 	req.Header.Set("User-Agent", userAgent)
 	if c.displayAddress != "" {
 		req.Header.Set("DisplayAddress", c.displayAddress)
+	}
+	if c.origin != "" {
+		req.Header.Set("Origin", c.origin)
 	}
 }
 
