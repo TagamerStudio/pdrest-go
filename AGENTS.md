@@ -4,8 +4,8 @@ Typed Go client for the PalDefender REST API.
 
 ## Conventions
 
-- **Language:** Go 1.25+
-- **Module:** `github.com/tagamer-net/pdrest-go` (package `pdrest`)
+- **Language:** Go 1.26+
+- **Module:** `github.com/TagamerStudio/pdrest-go` (package `pdrest`)
 - **Library only:** no CLI, no config loading, no env vars. Constructors take
   everything explicitly (URL, credentials, options). Environment reads are the
   caller's responsibility.

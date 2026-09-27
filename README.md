@@ -19,7 +19,7 @@ use the split reward endpoints (`GiveItems`, `GivePals`, `GivePalTemplates`,
 ## Install
 
 ```bash
-go get github.com/tagamer-net/pdrest-go
+go get github.com/TagamerStudio/pdrest-go
 ```
 
 ## Usage
