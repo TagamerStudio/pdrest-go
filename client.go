@@ -319,10 +319,11 @@ func (c *Client) requestInto(ctx context.Context, method, path string, body any,
 	return nil
 }
 
-// responseSnippet returns a bounded excerpt of the response body for error messages.
+// responseSnippet returns a bounded, UTF-8 safe excerpt of the response body
+// for error messages.
 func responseSnippet(body []byte) string {
 	const maxLen = 1024
-	text := strings.TrimSpace(string(body))
+	text := strings.ToValidUTF8(strings.TrimSpace(string(body)), "\uFFFD")
 	if len(text) <= maxLen {
 		return text
 	}
