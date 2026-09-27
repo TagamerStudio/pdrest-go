@@ -859,6 +859,109 @@ type DeleteBaseResponse struct {
 	Archive string `json:"Archive"`
 }
 
+// SummonPalRequest is the body of a Pal summon request. Exactly one of PalID
+// or PalTemplate must be provided. Coordinates are always sent; zero is a
+// valid coordinate value.
+type SummonPalRequest struct {
+	// PalID is the Pal species identifier; mutually exclusive with PalTemplate.
+	PalID string `json:"PalID,omitempty"`
+	// PalTemplate is a template filename from Pals/Templates/; mutually
+	// exclusive with PalID.
+	PalTemplate string `json:"PalTemplate,omitempty"`
+	// X is the map X coordinate.
+	X float64 `json:"X"`
+	// Y is the map Y coordinate.
+	Y float64 `json:"Y"`
+	// Z is the map Z coordinate.
+	Z float64 `json:"Z"`
+	// Level is the level for PalID summons (server default: 1). Ignored for a
+	// template.
+	Level int `json:"Level,omitempty"`
+	// Uncapturable prevents capture when true.
+	Uncapturable bool `json:"Uncapturable,omitempty"`
+	// DisableAI disables normal AI when true.
+	DisableAI bool `json:"DisableAI,omitempty"`
+	// DisableDamageMeter disables damage tracking when true.
+	DisableDamageMeter bool `json:"DisableDamageMeter,omitempty"`
+	// DisableStatuses are the status names to suppress.
+	DisableStatuses []string `json:"DisableStatuses,omitempty"`
+}
+
+// SummonedPal describes a Pal spawned by a summon request.
+type SummonedPal struct {
+	// Type is the summoned entity type ("Pal").
+	Type string `json:"Type"`
+	// PalID is the Pal species identifier.
+	PalID string `json:"PalID"`
+	// PalTemplate is the template filename, when a template was used.
+	PalTemplate string `json:"PalTemplate"`
+	// Level is the spawned Pal level.
+	Level int `json:"Level"`
+	// Uncapturable indicates whether capture is prevented.
+	Uncapturable bool `json:"Uncapturable"`
+	// DisableAI indicates whether normal AI is disabled.
+	DisableAI bool `json:"DisableAI"`
+	// DamageMeter is the damage meter state returned by the API.
+	DamageMeter bool `json:"DamageMeter"`
+	// X is the map X coordinate.
+	X float64 `json:"X"`
+	// Y is the map Y coordinate.
+	Y float64 `json:"Y"`
+	// Z is the map Z coordinate.
+	Z float64 `json:"Z"`
+}
+
+// SummonPalResponse describes the result of a Pal summon request.
+type SummonPalResponse struct {
+	// Summoned is the spawned Pal details.
+	Summoned SummonedPal `json:"Summoned"`
+}
+
+// SummonNPCRequest is the body of an NPC summon request. Coordinates are
+// always sent; zero is a valid coordinate value.
+type SummonNPCRequest struct {
+	// NPCID is the NPC ID or NPC character ID.
+	NPCID string `json:"NPCID"`
+	// X is the map X coordinate.
+	X float64 `json:"X"`
+	// Y is the map Y coordinate.
+	Y float64 `json:"Y"`
+	// Z is the map Z coordinate.
+	Z float64 `json:"Z"`
+	// Level is the NPC level (server default: 1).
+	Level int `json:"Level,omitempty"`
+	// Uncapturable prevents capture when true.
+	Uncapturable bool `json:"Uncapturable,omitempty"`
+	// DisableAI disables normal AI when true.
+	DisableAI bool `json:"DisableAI,omitempty"`
+}
+
+// SummonedNPC describes an NPC spawned by a summon request.
+type SummonedNPC struct {
+	// Type is the summoned entity type ("NPC").
+	Type string `json:"Type"`
+	// NPCID is the NPC ID.
+	NPCID string `json:"NPCID"`
+	// Level is the spawned NPC level.
+	Level int `json:"Level"`
+	// Uncapturable indicates whether capture is prevented.
+	Uncapturable bool `json:"Uncapturable"`
+	// DisableAI indicates whether normal AI is disabled.
+	DisableAI bool `json:"DisableAI"`
+	// X is the map X coordinate.
+	X float64 `json:"X"`
+	// Y is the map Y coordinate.
+	Y float64 `json:"Y"`
+	// Z is the map Z coordinate.
+	Z float64 `json:"Z"`
+}
+
+// SummonNPCResponse describes the result of an NPC summon request.
+type SummonNPCResponse struct {
+	// Summoned is the spawned NPC details.
+	Summoned SummonedNPC `json:"Summoned"`
+}
+
 // BanRequest is the body of a player ban request.
 type BanRequest struct {
 	// Reason is the ban reason.

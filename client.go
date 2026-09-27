@@ -65,6 +65,8 @@ type RESTClient interface {
 	LearnTech(ctx context.Context, playerIdentifier string, technology ...TechnologyInput) (*LearnTechResponse, error)
 	ForgetTech(ctx context.Context, playerIdentifier string, technology ...TechnologyInput) (*ForgetTechResponse, error)
 	DeleteBase(ctx context.Context, baseCampIdentifier string) (*DeleteBaseResponse, error)
+	SummonPal(ctx context.Context, request *SummonPalRequest) (*SummonPalResponse, error)
+	SummonNPC(ctx context.Context, request *SummonNPCRequest) (*SummonNPCResponse, error)
 	Ban(ctx context.Context, playerIdentifier, reason string, ip bool) (*BanResponse, error)
 	Unban(ctx context.Context, userID, reason string) (*UnbanResponse, error)
 	BanIP(ctx context.Context, ip string, request *BanIPRequest) (*BanIPResponse, error)
@@ -572,6 +574,44 @@ func (c *Client) DeleteBase(ctx context.Context, baseCampIdentifier string) (*De
 	}
 	var result DeleteBaseResponse
 	if err := c.requestInto(ctx, http.MethodPost, fmt.Sprintf("/deletebase/%s", baseCampIdentifier), map[string]any{}, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// SummonPal spawns a Pal at the given map coordinates. Exactly one of PalID
+// or PalTemplate must be provided. Coordinates are always sent, and zero is a
+// valid coordinate value.
+func (c *Client) SummonPal(ctx context.Context, request *SummonPalRequest) (*SummonPalResponse, error) {
+	if request == nil {
+		return nil, errors.New("request is required")
+	}
+	if (request.PalID == "") == (request.PalTemplate == "") {
+		return nil, errors.New("exactly one of palID or palTemplate must be provided")
+	}
+	for _, status := range request.DisableStatuses {
+		if strings.TrimSpace(status) == "" {
+			return nil, errors.New("disableStatuses must not contain empty entries")
+		}
+	}
+	var result SummonPalResponse
+	if err := c.requestInto(ctx, http.MethodPost, "/summon/pal", request, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// SummonNPC spawns an NPC at the given map coordinates. Coordinates are
+// always sent, and zero is a valid coordinate value.
+func (c *Client) SummonNPC(ctx context.Context, request *SummonNPCRequest) (*SummonNPCResponse, error) {
+	if request == nil {
+		return nil, errors.New("request is required")
+	}
+	if strings.TrimSpace(request.NPCID) == "" {
+		return nil, errors.New("npcID is required")
+	}
+	var result SummonNPCResponse
+	if err := c.requestInto(ctx, http.MethodPost, "/summon/npc", request, &result); err != nil {
 		return nil, err
 	}
 	return &result, nil

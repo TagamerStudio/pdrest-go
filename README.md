@@ -6,7 +6,7 @@
 Typed Go client for the
 [PalDefender](https://ultimeit.github.io/PalDefender/) REST API
 (`/v1/pdapi`): version, guilds, players, pals, items, techs, progression,
-bans, kicks, broadcasts, alerts and item/pal grants.
+bans, kicks, broadcasts, alerts, item/pal grants and Pal/NPC summons.
 
 PalDefender is a server-side validation plugin for Palworld dedicated
 servers (currently Windows-based) that detects and blocks cheats,
@@ -92,6 +92,13 @@ When granting items, repeated item IDs across the inputs are combined into a
 single grant entry of the summed count (keeping the first-seen order), so
 `GiveItems(ctx, id, "Money", []any{"Money", 2})` sends one `Money` grant of
 `3`.
+
+`SummonPal` and `SummonNPC` spawn entities at fixed map coordinates. For
+`SummonPal` exactly one of `PalID` or `PalTemplate` must be provided;
+coordinates are always sent, and zero is a valid coordinate value. The
+spawned entity details are returned in `Summoned`. On the response, the
+damage meter field follows the official documentation spelling
+(`DamageMeter`), while the request field is `DisableDamageMeter`.
 
 ## Errors
 

@@ -1109,6 +1109,202 @@ func TestClient_DeleteBase_RejectsNonGUID(t *testing.T) {
 	}
 }
 
+func TestClient_SummonPal(t *testing.T) {
+	handler := http.NewServeMux()
+	handler.HandleFunc("/v1/pdapi/summon/pal", func(w http.ResponseWriter, r *http.Request) {
+		if !assertSummonPalRequest(t, w, r) {
+			return
+		}
+		writeJSON(t, w, SummonPalResponse{Summoned: SummonedPal{
+			Type:        "Pal",
+			PalID:       "Foxparks",
+			Level:       12,
+			DamageMeter: true,
+			X:           230,
+			Y:           -486,
+			Z:           4097,
+		}})
+	})
+
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	client := newTestClient(t, srv.URL)
+
+	result, err := client.SummonPal(testCtx, &SummonPalRequest{
+		PalID:              "Foxparks",
+		X:                  230,
+		Y:                  -486,
+		Z:                  4097,
+		Level:              12,
+		Uncapturable:       true,
+		DisableAI:          true,
+		DisableDamageMeter: true,
+		DisableStatuses:    []string{"Burn"},
+	})
+	if err != nil {
+		t.Fatalf("SummonPal failed: %v", err)
+	}
+	if result.Summoned.Type != "Pal" || result.Summoned.PalID != "Foxparks" || result.Summoned.Level != 12 {
+		t.Fatalf("unexpected summon response: %+v", result.Summoned)
+	}
+	if !result.Summoned.DamageMeter || result.Summoned.X != 230 || result.Summoned.Z != 4097 {
+		t.Fatalf("unexpected summon response: %+v", result.Summoned)
+	}
+}
+
+func assertSummonPalRequest(t *testing.T, w http.ResponseWriter, r *http.Request) bool {
+	t.Helper()
+	if r.Method != http.MethodPost {
+		rejectRequest(t, w, "unexpected method %s", r.Method)
+		return false
+	}
+	var payload SummonPalRequest
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		rejectRequest(t, w, "failed to decode request: %v", err)
+		return false
+	}
+	if payload.PalID != "Foxparks" || payload.PalTemplate != "" {
+		rejectRequest(t, w, "unexpected summon pal target: %+v", payload)
+		return false
+	}
+	if payload.X != 230 || payload.Y != -486 || payload.Z != 4097 {
+		rejectRequest(t, w, "unexpected summon pal coordinates: %+v", payload)
+		return false
+	}
+	if payload.Level != 12 || !payload.Uncapturable || !payload.DisableAI || !payload.DisableDamageMeter {
+		rejectRequest(t, w, "unexpected summon pal options: %+v", payload)
+		return false
+	}
+	if len(payload.DisableStatuses) != 1 || payload.DisableStatuses[0] != "Burn" {
+		rejectRequest(t, w, "unexpected disable statuses: %+v", payload.DisableStatuses)
+		return false
+	}
+	return true
+}
+
+func TestClient_SummonPal_WithTemplate(t *testing.T) {
+	handler := http.NewServeMux()
+	handler.HandleFunc("/v1/pdapi/summon/pal", func(w http.ResponseWriter, r *http.Request) {
+		var payload map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			rejectRequest(t, w, "failed to decode request: %v", err)
+			return
+		}
+		if payload["PalTemplate"] != "ArenaBoss.json" {
+			rejectRequest(t, w, "unexpected template: %+v", payload)
+			return
+		}
+		if _, ok := payload["PalID"]; ok {
+			rejectRequest(t, w, "unexpected palID: %+v", payload)
+			return
+		}
+		for _, key := range []string{"X", "Y", "Z"} {
+			if _, ok := payload[key]; !ok {
+				rejectRequest(t, w, "missing coordinate %s: %+v", key, payload)
+				return
+			}
+		}
+		writeJSON(t, w, SummonPalResponse{Summoned: SummonedPal{Type: "Pal", PalTemplate: "ArenaBoss.json"}})
+	})
+
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	client := newTestClient(t, srv.URL)
+
+	result, err := client.SummonPal(testCtx, &SummonPalRequest{PalTemplate: "ArenaBoss.json"})
+	if err != nil {
+		t.Fatalf("SummonPal failed: %v", err)
+	}
+	if result.Summoned.PalTemplate != "ArenaBoss.json" {
+		t.Fatalf("unexpected summon response: %+v", result.Summoned)
+	}
+}
+
+func TestClient_SummonNPC(t *testing.T) {
+	handler := http.NewServeMux()
+	handler.HandleFunc("/v1/pdapi/summon/npc", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			rejectRequest(t, w, "unexpected method %s", r.Method)
+			return
+		}
+		var payload SummonNPCRequest
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			rejectRequest(t, w, "failed to decode request: %v", err)
+			return
+		}
+		if payload.NPCID != "PIDF_Soldier_AssaultRifle" || payload.X != 230 || payload.Y != -486 || payload.Z != 4097 {
+			rejectRequest(t, w, "unexpected summon npc payload: %+v", payload)
+			return
+		}
+		if payload.Level != 30 || !payload.Uncapturable || !payload.DisableAI {
+			rejectRequest(t, w, "unexpected summon npc options: %+v", payload)
+			return
+		}
+		writeJSON(t, w, SummonNPCResponse{Summoned: SummonedNPC{
+			Type:  "NPC",
+			NPCID: "PIDF_Soldier_AssaultRifle",
+			Level: 30,
+			X:     230,
+			Y:     -486,
+			Z:     4097,
+		}})
+	})
+
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	client := newTestClient(t, srv.URL)
+
+	result, err := client.SummonNPC(testCtx, &SummonNPCRequest{
+		NPCID:        "PIDF_Soldier_AssaultRifle",
+		X:            230,
+		Y:            -486,
+		Z:            4097,
+		Level:        30,
+		Uncapturable: true,
+		DisableAI:    true,
+	})
+	if err != nil {
+		t.Fatalf("SummonNPC failed: %v", err)
+	}
+	if result.Summoned.Type != "NPC" || result.Summoned.NPCID != "PIDF_Soldier_AssaultRifle" || result.Summoned.Level != 30 {
+		t.Fatalf("unexpected summon response: %+v", result.Summoned)
+	}
+	if result.Summoned.X != 230 || result.Summoned.Z != 4097 {
+		t.Fatalf("unexpected summon response: %+v", result.Summoned)
+	}
+}
+
+func TestClient_Summon_Validation(t *testing.T) {
+	client, err := NewClient("127.0.0.1", "token123")
+	if err != nil {
+		t.Fatalf("failed to create client: %v", err)
+	}
+	if _, err := client.SummonPal(testCtx, nil); err == nil {
+		t.Fatal("expected error for nil pal request")
+	}
+	if _, err := client.SummonPal(testCtx, &SummonPalRequest{X: 1}); err == nil {
+		t.Fatal("expected error when neither PalID nor PalTemplate is provided")
+	}
+	if _, err := client.SummonPal(testCtx, &SummonPalRequest{PalID: "Foxparks", PalTemplate: "Foxparks.json"}); err == nil {
+		t.Fatal("expected error when both PalID and PalTemplate are provided")
+	}
+	if _, err := client.SummonPal(testCtx, &SummonPalRequest{PalID: "Foxparks", DisableStatuses: []string{"Burn", " "}}); err == nil {
+		t.Fatal("expected error for empty disable status entry")
+	}
+	if _, err := client.SummonNPC(testCtx, nil); err == nil {
+		t.Fatal("expected error for nil npc request")
+	}
+	if _, err := client.SummonNPC(testCtx, &SummonNPCRequest{}); err == nil {
+		t.Fatal("expected error for empty npc id")
+	}
+	if _, err := client.SummonNPC(testCtx, &SummonNPCRequest{NPCID: "   "}); err == nil {
+		t.Fatal("expected error for whitespace-only npc id")
+	}
+}
+
 func TestClient_GiveProgression_DocumentedShape(t *testing.T) {
 	handler := http.NewServeMux()
 	handler.HandleFunc("/v1/pdapi/give/progression/player123", func(w http.ResponseWriter, r *http.Request) {
@@ -2099,6 +2295,14 @@ func TestClient_EndpointErrorBranches(t *testing.T) {
 		{"ForgetTech", func(c *Client) error { _, err := c.ForgetTech(testCtx, "player1", "Technology_1"); return err }},
 		{"DeleteBase", func(c *Client) error {
 			_, err := c.DeleteBase(testCtx, "13b9e8d7-4f2c-42a1-b79e-fc2a9186e4d5")
+			return err
+		}},
+		{"SummonPal", func(c *Client) error {
+			_, err := c.SummonPal(testCtx, &SummonPalRequest{PalID: "Foxparks", X: 1})
+			return err
+		}},
+		{"SummonNPC", func(c *Client) error {
+			_, err := c.SummonNPC(testCtx, &SummonNPCRequest{NPCID: "PIDF_Soldier", X: 1})
 			return err
 		}},
 		{"Ban", func(c *Client) error { _, err := c.Ban(testCtx, "player1", "reason", false); return err }},
