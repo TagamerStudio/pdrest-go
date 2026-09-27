@@ -439,6 +439,7 @@ func TestNormalizeBaseURL(t *testing.T) {
 		{"userinfo", "http://user:pass@host:17993", "", true},
 		{"path", "http://host:17993/api", "", true},
 		{"query", "http://host:17993?x=1", "", true},
+		{"force query", "http://host:17993?", "", true},
 		{"fragment", "http://host:17993#frag", "", true},
 		{"missing host", "http://:17993", "", true},
 		{"invalid hostname", "http://exa_mple.com", "", true},

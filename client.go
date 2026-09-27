@@ -870,7 +870,7 @@ func normalizeBaseURL(raw, defaultPort string) (string, error) {
 	if u.Path != "" && u.Path != "/" {
 		return "", fmt.Errorf("base URL must not contain a path: %q", raw)
 	}
-	if u.RawQuery != "" {
+	if u.RawQuery != "" || u.ForceQuery {
 		return "", fmt.Errorf("base URL must not contain a query string: %q", raw)
 	}
 	if u.Fragment != "" {
