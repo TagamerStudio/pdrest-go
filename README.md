@@ -1,6 +1,8 @@
 # Tagamer PalDefender REST Client (Go)
 
-[![Go](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go)](https://go.dev)
+[![CI](https://github.com/TagamerStudio/pdrest-go/actions/workflows/ci.yml/badge.svg)](https://github.com/TagamerStudio/pdrest-go/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/TagamerStudio/pdrest-go.svg)](https://pkg.go.dev/github.com/TagamerStudio/pdrest-go)
+[![Go](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go)](https://go.dev)
 [![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](LICENSE)
 
 Typed Go client for the
@@ -128,6 +130,11 @@ make check
 go test -count=1 -race ./...
 go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2 run --config .golangci.yml --timeout 5m ./...
 ```
+
+`contract_test.go` verifies the documented request and response shapes using
+fixtures under `testdata/contract/2026-09-17/`, pinned to the PalDefender wiki
+revision `67883072` (2026-09-17). The fuzz targets in `fuzz_test.go` can be
+run with `make fuzz FUZZ_TARGET=FuzzNormalizeBaseURL`.
 
 ## License
 
