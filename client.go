@@ -188,6 +188,7 @@ func NewClient(baseURL, bearerToken string, opts ...Option) (*Client, error) {
 			transport = defaultTransport.Clone()
 			transport.Proxy = nil
 		}
+		transport.MaxIdleConnsPerHost = 16
 		client.httpClient = &http.Client{
 			Transport: transport,
 			Timeout:   client.timeout,
