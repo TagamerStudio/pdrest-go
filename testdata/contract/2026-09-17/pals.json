@@ -1,0 +1,54 @@
+{
+  "Meta": {
+    "PlayerUID": "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+    "Player": "steam_76561198012345678",
+    "TeamCount": 1,
+    "PalboxCount": 0,
+    "BaseCampCount": 1
+  },
+  "Pals": {
+    "Team": {
+      "pal-1": {
+        "PalID": "SheepBall",
+        "Nickname": "Lamball",
+        "SkinId": "",
+        "Gender": "Male",
+        "Level": 12,
+        "Exp": 1234,
+        "Shiny": false,
+        "PartnerSkillLevel": 1,
+        "CondensedPals": 0,
+        "UnusedStatusPoints": 0,
+        "FriendshipPoints": 10,
+        "PhysicalHealth": "Healthy",
+        "WorkerSick": "None",
+        "ImportedCharacter": false,
+        "HP": 100,
+        "Hunger": 50,
+        "MaxHunger": 100,
+        "SAN": 90,
+        "Support": 0,
+        "CraftSpeed": 100,
+        "PalSouls": {"Health": 0, "Attack": 0, "Defense": 0, "CraftSpeed": 0},
+        "IVs": {"Health": 50, "AttackMelee": 50, "AttackShot": 50, "Defense": 50},
+        "ActiveSkills": ["Skill_1"],
+        "LearntSkills": ["Skill_1", "Skill_2"],
+        "Passives": [],
+        "ExtraWorkSuitabilities": {},
+        "DisableWorkPreferences": [],
+        "team_slot_index": 0
+      }
+    },
+    "Palbox": {},
+    "BaseCamps": [
+      {
+        "id": "13b9e8d7-4f2c-42a1-b79e-fc2a9186e4d5",
+        "level": 3,
+        "world_pos": {"x": 230.5, "y": -486.25, "z": 4097.0},
+        "map_pos": {"x": 115.25, "y": -243.125, "z": 0},
+        "state": "Normal",
+        "pals": {}
+      }
+    ]
+  }
+}

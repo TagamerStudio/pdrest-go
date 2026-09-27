@@ -1,0 +1,50 @@
+{
+  "Banlist": {
+    "Version": 1,
+    "BannedMessage": "You are banned from this server.",
+    "UserEntries": [
+      {
+        "UserId": "steam_76561198012345678",
+        "Active": true,
+        "BannedBy": {
+          "Type": "rest",
+          "NameValue": "admin-token",
+          "IP": "203.0.113.1",
+          "Reason": "Rule violation",
+          "Timestamp": {
+            "UTC": 1750000000,
+            "Year": 2026,
+            "Month": 6,
+            "Day": 15,
+            "Hour": 12,
+            "Min": 0,
+            "Sec": 0,
+            "Msec": 0
+          }
+        }
+      }
+    ],
+    "IPEntries": [
+      {
+        "IP": "198.51.100.9",
+        "Active": true,
+        "BannedBy": {
+          "Type": "rest",
+          "NameValue": "admin-token",
+          "IP": "203.0.113.1",
+          "Reason": "Ban evasion",
+          "Timestamp": {
+            "UTC": 1750000001,
+            "Year": 2026,
+            "Month": 6,
+            "Day": 15,
+            "Hour": 12,
+            "Min": 0,
+            "Sec": 1,
+            "Msec": 0
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "Meta": {
+    "PlayerUID": "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+    "Player": "steam_76561198012345678"
+  },
+  "Progression": {
+    "Player": {
+      "level": 42,
+      "exp": 123456,
+      "unusedStatusPoints": 3
+    },
+    "Currencies": {
+      "relics": {"CapturePower": 5},
+      "technologyPoints": 10,
+      "ancientTechnologyPoints": 2
+    },
+    "Bosses": {
+      "towerBossDefeatCounts": {"Boss_1": 2},
+      "normalBossDefeatFlags": {"Boss_2": true},
+      "raidBossDefeatCounts": {},
+      "totalBossDefeatCount": 3,
+      "predatorDefeatCount": 1
+    },
+    "Captures": {
+      "tribeCaptureCount": 7,
+      "palCaptureCounts": {"SheepBall": 4},
+      "palCaptureBonusCounts": {"SheepBall": 1},
+      "palButcherCounts": {}
+    },
+    "Activities": {
+      "craftItemCounts": {"Money": 2},
+      "normalDungeonClearCount": 1,
+      "fixedDungeonClearCount": 0,
+      "oilrigClearCount": 0,
+      "palRankUpCounts": {},
+      "arenaSoloClearCounts": {},
+      "npcTalkCounts": {},
+      "fishingCounts": {},
+      "foundTreasureCount": 0,
+      "campConqueredCount": 0,
+      "firstFishingComplete": false
+    }
+  }
+}

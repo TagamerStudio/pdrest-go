@@ -1,0 +1,12 @@
+{
+  "Meta": {
+    "PlayerUID": "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+    "Player": "steam_76561198012345678",
+    "UnlockedCount": 2,
+    "LockedCount": 1,
+    "TotalCount": 3
+  },
+  "Techs": {
+    "Unlocked": ["Technology_1", "Technology_2"]
+  }
+}

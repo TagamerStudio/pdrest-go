@@ -1,0 +1,19 @@
+{
+  "Meta": {
+    "PlayerCount": 1,
+    "OnlineCount": 1
+  },
+  "Players": [
+    {
+      "Name": "Alice",
+      "IP": "203.0.113.7",
+      "PlayerUID": "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+      "UserId": "steam_76561198012345678",
+      "GuildName": "Builders",
+      "GuildUUID": "f0a1c3e9-7d5b-4a28-8c33-411fdc2e6b74",
+      "Status": "Online",
+      "WorldLocation": {"x": 230.5, "y": -486.25, "z": 4097.0},
+      "MapLocation": {"x": 115.25, "y": -243.125, "z": 0}
+    }
+  ]
+}

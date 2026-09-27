@@ -1,0 +1,11 @@
+{
+  "Version": {
+    "Major": 0,
+    "Minor": 8,
+    "Patch": 1,
+    "Build": 1234,
+    "Version": "0.8.1",
+    "VersionLong": "0.8.1.1234",
+    "Beta": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "/give/items/steam_76561198012345678": "{\"Granted\":{\"Items\":3}}",
+  "/give/pals/steam_76561198012345678": "{\"Granted\":{\"Pals\":1}}",
+  "/give/paltemplate/steam_76561198012345678": "{\"Granted\":{\"PalTemplates\":1}}",
+  "/give/paleggs/steam_76561198012345678": "{\"Granted\":{\"PalEggs\":1}}",
+  "/give/progression/steam_76561198012345678": "{\"Granted\":{\"EXP\":1000},\"Totals\":{\"TechnologyPoints\":10}}",
+  "/learntech/steam_76561198012345678": "{\"UnlockedCount\":1,\"Unlocked\":[\"Technology_1\"],\"Skipped\":[]}",
+  "/forgettech/steam_76561198012345678": "{\"ForgottenCount\":1,\"Forgotten\":\"All\",\"Skipped\":[]}",
+  "/deletebase/13b9e8d7-4f2c-42a1-b79e-fc2a9186e4d5": "{\"BaseCamp\":{\"Id\":\"13b9e8d7-4f2c-42a1-b79e-fc2a9186e4d5\",\"Summary\":\"Builders camp\"},\"Deleted\":{\"BaseCampPals\":1,\"StorageContainers\":2,\"ItemStacks\":3,\"ItemCount\":30,\"Buildings\":4,\"DropItems\":0,\"DefenseModels\":0,\"OtherMapObjects\":0,\"PalBox\":true},\"Archive\":\"archive.zip\"}",
+  "/summon/pal": "{\"Summoned\":{\"Type\":\"Pal\",\"PalID\":\"Foxparks\",\"Level\":12,\"Uncapturable\":false,\"DisableAI\":false,\"DamageMeter\":true,\"X\":230,\"Y\":-486,\"Z\":4097}}",
+  "/summon/npc": "{\"Summoned\":{\"Type\":\"NPC\",\"NPCID\":\"PIDF_Soldier_AssaultRifle\",\"Level\":1,\"Uncapturable\":false,\"DisableAI\":false,\"X\":230,\"Y\":-486,\"Z\":4097}}",
+  "/ban/steam_76561198012345678": "{\"Success\":true,\"UserId\":\"steam_76561198012345678\"}",
+  "/unban/steam_76561198012345678": "{\"Success\":true,\"UserId\":\"steam_76561198012345678\"}",
+  "/banip/203.0.113.7": "{\"Success\":true}",
+  "/unbanip/203.0.113.7": "{\"Success\":true}",
+  "/kick/steam_76561198012345678": "{\"Success\":true}",
+  "/Broadcast": "{\"Success\":true}",
+  "/Alert": "{\"Success\":true}",
+  "/ReloadConfig": "{\"Success\":true}",
+  "/SendPlayerMessage": "{\"Success\":true,\"SentCount\":1}"
+}

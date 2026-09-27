@@ -1,0 +1,71 @@
+{
+  "Guild": {
+    "name": "Builders",
+    "Level": 5,
+    "admin": {
+      "id": "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+      "name": "Alice"
+    },
+    "member_count": 1,
+    "members": [
+      {
+        "player_uid": "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+        "player_name": "Alice",
+        "status": "Online"
+      }
+    ],
+    "camp_count": 1,
+    "camps": [
+      {
+        "id": "13b9e8d7-4f2c-42a1-b79e-fc2a9186e4d5",
+        "level": 3,
+        "world_pos": {"x": 230.5, "y": -486.25, "z": 4097.0},
+        "map_pos": {"x": 115.25, "y": -243.125, "z": 0},
+        "state": "Normal",
+        "pals": {
+          "pal-1": {
+            "nickname": "Lamball",
+            "pal_id": "SheepBall",
+            "npc_id": "NPC_SheepBall",
+            "skin_id": "",
+            "gender": "Male",
+            "level": 12,
+            "shiny": false,
+            "phisical_health": "Healthy",
+            "worker_sick": "None",
+            "san": 100,
+            "imported": false,
+            "friendship": 10,
+            "active_skills": ["Skill_1"],
+            "learnt_skills": ["Skill_1", "Skill_2"],
+            "passives": ["Passive_1"]
+          }
+        },
+        "buildings": ""
+      }
+    ],
+    "items": {
+      "container_id": "guild-container-1",
+      "current": 1,
+      "max": 30,
+      "0": {
+        "item_id": "Money",
+        "count": 5
+      }
+    },
+    "expeditions": {
+      "finished": 1,
+      "missions": {"Mission_1": true}
+    },
+    "laboratory": {
+      "current_research": "Research_1",
+      "researches": {
+        "Research_1": {
+          "work_amount": 5,
+          "required_work_amount": 10,
+          "percentage": 0.5
+        }
+      }
+    }
+  }
+}

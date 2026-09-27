@@ -1,0 +1,28 @@
+{
+  "Meta": {
+    "GuildCount": 1
+  },
+  "Guilds": {
+    "f0a1c3e9-7d5b-4a28-8c33-411fdc2e6b74": {
+      "name": "Builders",
+      "Level": 5,
+      "admin": {
+        "id": "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+        "name": "Alice"
+      },
+      "camp_count": 1,
+      "camps": [
+        {
+          "id": "13b9e8d7-4f2c-42a1-b79e-fc2a9186e4d5",
+          "world_pos": {"x": 230.5, "y": -486.25, "z": 4097.0},
+          "map_pos": {"x": 115.25, "y": -243.125, "z": 0}
+        }
+      ],
+      "member_count": 2,
+      "members": [
+        "6d2e8b40-73ef-4f11-9bb8-2e91a36e2f09",
+        "b7f4e91a-2c53-4d8f-a6e1-93c4bb62a7d1"
+      ]
+    }
+  }
+}
