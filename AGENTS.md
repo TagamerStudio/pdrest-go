@@ -32,5 +32,5 @@ one logical change per commit, `make check` before committing.
 
 ## Versioning
 
-Published with semver tags (currently `v0.1.2`). Breaking changes bump the
+Published with semver tags (currently `v0.2.0`). Breaking changes bump the
 minor version while on `v0.x`.
