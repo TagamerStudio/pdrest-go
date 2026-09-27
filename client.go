@@ -153,6 +153,9 @@ func NewClient(baseURL, bearerToken string, opts ...Option) (*Client, error) {
 	if bearerToken == "" {
 		return nil, errors.New("bearer token is required")
 	}
+	if !validHeaderValue(bearerToken) {
+		return nil, errors.New("bearer token contains invalid characters")
+	}
 
 	normalized, err := normalizeBaseURL(baseURL, defaultPort)
 	if err != nil {
@@ -172,10 +175,19 @@ func NewClient(baseURL, bearerToken string, opts ...Option) (*Client, error) {
 	if client.timeoutSet && client.timeout <= 0 {
 		return nil, errors.New("timeout must be a positive duration")
 	}
+	if client.displayAddress != "" && !validHeaderValue(client.displayAddress) {
+		return nil, errors.New("display address contains invalid characters")
+	}
+	if client.origin != "" && !validHeaderValue(client.origin) {
+		return nil, errors.New("origin contains invalid characters")
+	}
 
 	if client.httpClient == nil {
-		transport := http.DefaultTransport.(*http.Transport).Clone()
-		transport.Proxy = nil
+		transport := &http.Transport{Proxy: nil}
+		if defaultTransport, ok := http.DefaultTransport.(*http.Transport); ok {
+			transport = defaultTransport.Clone()
+			transport.Proxy = nil
+		}
 		client.httpClient = &http.Client{
 			Transport: transport,
 			Timeout:   client.timeout,
@@ -817,7 +829,8 @@ func (c *Client) doPost(ctx context.Context, path string, body any) (*GrantResul
 }
 
 func (c *Client) pathPart(label, value string) (string, error) {
-	if strings.TrimSpace(value) == "" {
+	value = strings.TrimSpace(value)
+	if value == "" {
 		return "", fmt.Errorf("%s must not be empty", label)
 	}
 	if value == "." || value == ".." {
@@ -904,7 +917,7 @@ func validHostname(host string) bool {
 	if len(host) > 0 && host[len(host)-1] == '.' {
 		host = host[:len(host)-1]
 	}
-	if len(host) == 0 || len(host) > 253 {
+	if len(host) == 0 || len(host) > 253 || host[len(host)-1] == '.' {
 		return false
 	}
 	if !validHostnameLabels(host) {
@@ -945,6 +958,18 @@ func validLabelChar(r byte, labelLen int) bool {
 		return false
 	}
 	return (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '-'
+}
+
+// validHeaderValue reports whether value is usable as an HTTP header value.
+// Control characters are rejected so configuration errors surface at
+// construction time instead of as opaque transport failures.
+func validHeaderValue(value string) bool {
+	for i := 0; i < len(value); i++ {
+		if value[i] < 0x20 || value[i] == 0x7f {
+			return false
+		}
+	}
+	return true
 }
 
 // redactUserinfo masks credentials in raw so error messages referencing the

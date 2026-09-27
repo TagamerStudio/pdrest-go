@@ -128,6 +128,36 @@ func TestNewClient_KeepsInjectedZeroTimeoutWithoutWithTimeout(t *testing.T) {
 	}
 }
 
+func TestNewClient_RejectsInvalidHeaderValues(t *testing.T) {
+	for _, token := range []string{"tok\nen", "tok\rden", "tok\x00en", "tok\x7fen"} {
+		if _, err := NewClient("127.0.0.1", token); err == nil {
+			t.Fatalf("expected error for bearer token %q", token)
+		}
+	}
+	if _, err := NewClient("127.0.0.1", "token123", WithDisplayAddress("panel\n1")); err == nil {
+		t.Fatal("expected error for display address with control characters")
+	}
+	if _, err := NewClient("127.0.0.1", "token123", WithOrigin("http://ho\rst")); err == nil {
+		t.Fatal("expected error for origin with control characters")
+	}
+}
+
+func TestNewClient_FallsBackWhenDefaultTransportIsNotHTTPTransport(t *testing.T) {
+	original := http.DefaultTransport
+	http.DefaultTransport = errorRoundTripper{}
+	defer func() {
+		http.DefaultTransport = original
+	}()
+
+	client, err := NewClient("127.0.0.1", "token123")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if _, ok := client.httpClient.Transport.(*http.Transport); !ok {
+		t.Fatalf("expected *http.Transport fallback, got %T", client.httpClient.Transport)
+	}
+}
+
 func TestAPIError_Error(t *testing.T) {
 	err := &APIError{
 		StatusCode:   401,
@@ -336,7 +366,7 @@ func TestClient_DotPathSegmentsRejected(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create client: %v", err)
 	}
-	for _, value := range []string{".", ".."} {
+	for _, value := range []string{".", "..", " . "} {
 		t.Run(value, func(t *testing.T) {
 			tests := []struct {
 				name string
@@ -355,6 +385,26 @@ func TestClient_DotPathSegmentsRejected(t *testing.T) {
 				})
 			}
 		})
+	}
+}
+
+func TestClient_PathPartTrimsWhitespace(t *testing.T) {
+	handler := http.NewServeMux()
+	handler.HandleFunc("/v1/pdapi/player/player123", func(w http.ResponseWriter, r *http.Request) {
+		writeJSON(t, w, PlayerResponse{Player: PlayerInfo{Name: "Alice"}})
+	})
+
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	client := newTestClient(t, srv.URL)
+
+	result, err := client.GetPlayer(testCtx, "  player123  ")
+	if err != nil {
+		t.Fatalf("GetPlayer failed: %v", err)
+	}
+	if result.Name != "Alice" {
+		t.Fatalf("unexpected player: %+v", result)
 	}
 }
 

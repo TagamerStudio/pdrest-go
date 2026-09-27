@@ -434,6 +434,7 @@ func TestNormalizeBaseURL(t *testing.T) {
 		{"ipv6 no port", "http://[::1]", "http://[::1]:17993", false},
 		{"ipv6 zone", "http://[fe80::1%25eth0]:17993", "http://[fe80::1%25eth0]:17993", false},
 		{"fqdn trailing dot", "http://host.example.:17993", "http://host.example.:17993", false},
+		{"hostname empty trailing label", "http://host.example..", "", true},
 		{"unsupported scheme", "ftp://host", "", true},
 		{"userinfo", "http://user:pass@host:17993", "", true},
 		{"path", "http://host:17993/api", "", true},
