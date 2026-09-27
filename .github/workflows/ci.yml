@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     name: Lint and Test
@@ -16,16 +20,67 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
-          go-version: "1.25"
+          go-version: "1.26.7"
           cache: true
       - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9
         with:
           version: v2.12.2
+          github-token: ""
           args: --config .golangci.yml --timeout 5m ./...
       - run: go mod verify
       - run: go vet ./...
       - run: go test -count=1 -race ./...
       - run: go test -count=1 -coverprofile=coverage.out ./...
-      - run: go tool cover -func=coverage.out | grep "total:.*100.0%"
+      - name: Coverage summary
+        run: |
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          go tool cover -func=coverage.out >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - run: go tool cover -func=coverage.out | grep -E "total:.*100\.0%"
+
+  govulncheck:
+    name: Vulnerability scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: "1.26.7"
+          cache: true
+      - name: Run govulncheck
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.8.0 ./...
+        env:
+          GOTOOLCHAIN: local
+
+  tip:
+    name: Test (Go tip)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: "1.26.7"
+          cache: true
+      - name: Build Go tip
+        run: |
+          git init "$RUNNER_TEMP/gotip"
+          git -C "$RUNNER_TEMP/gotip" remote add origin https://go.googlesource.com/go
+          git -C "$RUNNER_TEMP/gotip" fetch --depth=1 origin master
+          git -C "$RUNNER_TEMP/gotip" checkout --detach FETCH_HEAD
+          cd "$RUNNER_TEMP/gotip/src"
+          ./make.bash
+          echo "GOROOT=$RUNNER_TEMP/gotip" >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/gotip/bin" >> "$GITHUB_PATH"
+      - run: go version
+      - run: go test -count=1 -race ./...
