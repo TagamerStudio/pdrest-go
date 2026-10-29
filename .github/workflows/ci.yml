@@ -55,7 +55,7 @@ jobs:
           go-version: "1.26.7"
           cache: true
       - name: Run govulncheck
-        run: go run golang.org/x/vuln/cmd/govulncheck@v1.8.0 ./...
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
         env:
           GOTOOLCHAIN: local
 
